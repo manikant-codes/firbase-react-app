@@ -8,26 +8,28 @@ function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    if (e.target["password"].value !== e.target["confirmPassword"].value) {
+      alert("Passwords do not match!");
+      return;
+    }
+
     try {
-      if (e.target["password"].value !== e.target["confirmPassword"].value) {
-        alert("Passwords do not match!");
-        return;
-      }
-
-      const data = {
-        email: e.target["email"].value,
-        password: e.target["password"].value,
-      };
-
+      const email = e.target["email"].value;
+      const password = e.target["password"].value;
       const result = await createUserWithEmailAndPassword(
         auth,
-        data.email,
-        data.password
+        email,
+        password
       );
 
-      console.log("result", result.user);
+      if (result.user) {
+        localStorage.setItem("user", JSON.stringify(result?.user));
+      } else {
+        localStorage.removeItem("user");
+        throw new Error();
+      }
     } catch (error) {
-      console.log("Error: ", error);
+      console.log("User registration failed!");
     }
   }
 

@@ -1,8 +1,15 @@
-import { Navbar } from "flowbite-react";
+import { signOut } from "firebase/auth";
+import { Button, Navbar } from "flowbite-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../services/firebaseServices";
 
 function NavbarComponent() {
+  async function handleLogout() {
+    await signOut(auth);
+    localStorage.removeItem("user");
+  }
+
   return (
     <div>
       <Navbar fluid rounded>
@@ -19,7 +26,9 @@ function NavbarComponent() {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Link to="/">Home</Link>
+          <Link to="/dashboard">Dashboard</Link>
           <Link to="/login">Login/Register</Link>
+          <Button onClick={handleLogout}>Logout</Button>
         </Navbar.Collapse>
       </Navbar>
     </div>

@@ -7,21 +7,20 @@ import { auth } from "../services/firebaseServices";
 function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
+
     try {
-      const data = {
-        email: e.target["email"].value,
-        password: e.target["password"].value,
-      };
+      const email = e.target["email"].value;
+      const password = e.target["password"].value;
+      const result = await signInWithEmailAndPassword(auth, email, password);
 
-      const result = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-
-      console.log("result", result);
+      if (result.user) {
+        localStorage.setItem("user", JSON.stringify(result?.user));
+      } else {
+        localStorage.removeItem("user");
+        throw new Error();
+      }
     } catch (error) {
-      console.log("Error: ", error);
+      console.log("User registration failed!");
     }
   }
 
