@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../services/firebaseServices";
+import ListItem from "./ListItem";
 
 function Dashboard() {
   const [input, setInput] = useState("");
@@ -25,16 +26,6 @@ function Dashboard() {
       setTasks(data);
     });
   }, []);
-
-  async function handleDelete(id) {
-    try {
-      const docRef = doc(db, "tasks", id);
-      await deleteDoc(docRef);
-      alert("Document deleted!");
-    } catch (error) {
-      alert("Something went wrong!");
-    }
-  }
 
   function handleChange(e) {
     setInput(e.target.value);
@@ -62,22 +53,7 @@ function Dashboard() {
       </div>
       <ul className="mt-4 flex flex-col gap-4">
         {tasks.map((task) => {
-          return (
-            <li
-              key={task.id}
-              className="flex gap-4 items-center bg-slate-200 p-4 rounded"
-            >
-              <Checkbox checked={task.data.completed} />
-              <p className="flex-[1]">{task.data.task}</p>
-              <Button
-                size="xs"
-                color="failure"
-                onClick={() => handleDelete(task.id)}
-              >
-                Delete
-              </Button>
-            </li>
-          );
+          return <ListItem key={task.id} task={task} />;
         })}
       </ul>
     </div>
